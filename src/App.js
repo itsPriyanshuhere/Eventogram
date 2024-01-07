@@ -1,24 +1,58 @@
-import Navbar from "./components/Navbar"
-import Hero from "./components/Hero"
-import { Route, Routes } from "react-router-dom"
-import Home from "./components/Home"
-import EventDetail from "./components/EventDetail"
-import NoMatch from "./components/NoMatch"
-import Login from "./components/Login"
-import SignUp from "./components/SignUp"
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Navbar from "./Components/Navbar"
+import Home from "./pages/Home"
+import Login from "./pages/Login"
+import Signup from "./pages/Signup"
+import Dashboard from "./pages/Dashboard"
+import { useState } from 'react'
+import PrivateRoute from "./Components/PrivateRoute";
+import ForgotPassword from "./pages/ForgotPassword";
+import UpdatePassword from "./pages/UpdatePassword";
+import EventDetail from "./Components/EventDetail";
+import Hero from "./Components/Hero";
 
-export default function App() {
+function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ 
+
   return (
-    <>
-    <Navbar />
-    <Routes>
-      <Route path = "/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<SignUp />} />
-      <Route path="/shows" element={<Hero />} />
-      <Route path="/events/:id" element={<EventDetail />} />
-      <Route path="*" element={<NoMatch />} />
-    </Routes>
-    </>
-  )
+    <div className="w-screen h-screen bg-richblack-900 flex flex-col">
+      <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+
+      <Routes>
+
+        <Route path="/" element= {<Home isLoggedIn={isLoggedIn}/>} />
+        <Route path="/login" element = {<Login  setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/signup" element={<Signup  setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/shows" element={<Hero />} />
+        <Route path="/events/:id" element={<EventDetail />} />
+        <Route
+          path="forgot-password"
+          element={
+              <ForgotPassword />
+          }
+        /> 
+
+        <Route
+          path="resetpassword"
+          element={
+              <UpdatePassword />
+          }
+        />
+
+        <Route path="/dashboard" element = {
+          <PrivateRoute isLoggedIn={isLoggedIn}>
+              <Dashboard/>
+          </PrivateRoute>
+       
+        } />
+
+      </Routes>
+
+    </div>
+    )
 }
+
+export default App;
