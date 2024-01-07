@@ -1,51 +1,81 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaRegUser } from "react-icons/fa";
-import { motion } from "framer-motion";
+import React from 'react'
+import logo from "../assets/Logo.jpg"
+import { Link } from "react-router-dom"
+import { toast } from "react-hot-toast"
 
-const arr = [
-  { name: "Home", hash: "/" },
-  { name: "Shows", hash: "shows" },
-  { name: "Contact", hash: "contact" },
-];
 
-const Navbar = () => {
+const Navbar = (props) => {
+    let isLoggedIn = props.isLoggedIn;
+    let setIsLoggedIn = props.setIsLoggedIn;
+
   return (
-    <>
-      <motion.div
-        initial={{ opacity: 0, y: -20, top: 0 }}
-        animate={{ opacity: 1, y: 0, top: 6 }}
-        transition={{ duration: 0.8 }}
-        className="fixed text-white top-6 left-4 right-4 bg-opacity-80 bg-black z-10 px-2 py-1"
-      >
-        <nav className="flex justify-between items-center pt-6">
-          <div className="flex items-center space-x-12">
-            {/* Spacer to push the links to the center */}
-            <div className="flex-grow"></div>
-            {arr.map((item) => (
-              <Link
-                key={item.hash}
-                to={`${item.hash}`}
-                className="text-white text-2xl font-bold shadow-md items-center justify-center font-raleway transition duration-300 hover:text-purple-400"
-              >
-                {item.name}
-              </Link>
-            ))}
-            {/* Spacer to push the links to the center */}
-            <div className="flex-grow"></div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Link
-              to="/login"
-              className="flex items-center gap-2 text-white hover:text-purple-400 transition duration-300"
-            >
-              <FaRegUser /> <span className="font-bold">Login</span>
-            </Link>
-          </div>
-        </nav>
-      </motion.div>
-    </>
-  );
-};
+    <div className='flex justify-between items-center w-11/12 max-w-[1160px] py-4 mx-auto'>
 
-export default Navbar;
+        <Link to="/"> 
+            <img src={logo} alt="Logo" width={100} height={32} loading="lazy" className='rounded-full'/>
+        </Link>
+
+        <nav>
+            <ul className='text-richblack-100 flex gap-x-6'>
+                <li>
+                    <Link to="/">Home</Link>
+                </li>
+                <li>
+                {/* { isLoggedIn && */}
+                <Link to="/shows">
+                  Shows
+                </Link>
+            {/* } */}
+                </li>
+                <li>
+                    <Link to="/">Contact</Link>
+                </li>
+            </ul>
+        </nav>
+
+        {/* Login - SignUp - LogOut - Dashboard */}
+        <div className='flex items-center gap-x-4'>
+            { !isLoggedIn &&
+                <Link to="/login">
+                    <button className='bg-richblack-800 text-richblack-100 py-[8px] 
+                    px-[12px] rounded-[8px] border border-richblack-700'>
+                        Log in
+                    </button>
+                </Link>
+            }
+            { !isLoggedIn &&
+                <Link to="/signup">
+                    <button  className='bg-richblack-800 text-richblack-100 py-[8px] 
+                    px-[12px] rounded-[8px] border border-richblack-700'>
+                        Sign up
+                    </button>
+                </Link>
+            }
+            { isLoggedIn &&
+                <Link to="/">
+                    <button onClick={() => {
+                        setIsLoggedIn(false);
+                        toast.success("Logged Out");
+                    }}
+                    className='bg-richblack-800 text-richblack-100 py-[8px] 
+                    px-[12px] rounded-[8px] border border-richblack-700'>
+                        Log Out
+                    </button>
+                </Link>
+            }
+            { isLoggedIn &&
+                <Link to="/dashboard">
+                    <button
+                     className='bg-richblack-800 text-richblack-100 py-[8px] 
+                    px-[12px] rounded-[8px] border border-richblack-700'>
+                        Dashboard
+                    </button>
+                </Link>
+            }
+        </div>
+      
+    </div>
+  )
+}
+
+export default Navbar
